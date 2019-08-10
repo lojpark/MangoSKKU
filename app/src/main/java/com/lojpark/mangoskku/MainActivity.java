@@ -17,7 +17,7 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity {
 
     private TextView textView1;
-    private String htmlPageUrl = "https://dorm.skku.edu/dorm_suwon";
+    private String htmlPageUrl = "https://www.skku.edu/skku/campus/support/welfare_11_1.do?mode=info&srDt=2019-08-12&srCategory=L&conspaceCd=20201104&srResId=3&srShowTime=D";
     private String htmlContentInStringFormat="";
 
     @Override
@@ -45,7 +45,8 @@ public class MainActivity extends AppCompatActivity {
                 Document doc = Jsoup.connect(htmlPageUrl).get();
 
                 // Elements titles = doc.select("div.news-con h2.tit-news");
-                Elements menus = doc.select("div.mini-diet-wrap div ul");
+                // Elements menus = doc.select("div.mini-diet-wrap div ul");
+                Elements menus = doc.select("div.corner_info ul li div.menu_title");
 
                 for (Element e: menus) {
                     System.out.println("menu: " + e.text());
