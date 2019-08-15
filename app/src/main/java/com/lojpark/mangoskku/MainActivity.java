@@ -17,7 +17,6 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity {
 
     private TextView textView1;
-    private String htmlPageUrl = "https://www.skku.edu/skku/campus/support/welfare_11_1.do?mode=info&srDt=2019-08-12&srCategory=L&conspaceCd=20201104&srResId=3&srShowTime=D";
     private String htmlContentInStringFormat="";
 
     @Override
@@ -42,14 +41,43 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... params) {
             try {
+                String htmlPageUrl = "https://www.skku.edu/skku/campus/support/welfare_11_1.do?mode=info&srDt=2019-08-16&srCategory=L&conspaceCd=20201104&srResId=3&srShowTime=D";
                 Document doc = Jsoup.connect(htmlPageUrl).get();
 
-                // Elements titles = doc.select("div.news-con h2.tit-news");
-                // Elements menus = doc.select("div.mini-diet-wrap div ul");
                 Elements menus = doc.select("div.corner_info ul li div.menu_title");
 
+                htmlContentInStringFormat += "<행단골>" + "\n";
                 for (Element e: menus) {
-                    System.out.println("menu: " + e.text());
+                    htmlContentInStringFormat += e.text().trim() + "\n";
+                }
+
+                htmlPageUrl = "https://www.skku.edu/skku/campus/support/welfare_11_1.do?mode=info&srDt=2019-08-16&srCategory=L&conspaceCd=20201040&srResId=11&srShowTime=D";
+                doc = Jsoup.connect(htmlPageUrl).get();
+
+                menus = doc.select("div.corner_info ul li div.menu_title");
+
+                htmlContentInStringFormat += "<구시재>" + "\n";
+                for (Element e: menus) {
+                    htmlContentInStringFormat += e.text().trim() + "\n";
+                }
+
+                htmlPageUrl = "https://www.skku.edu/skku/campus/support/welfare_11_1.do?mode=info&srDt=2019-08-16&srCategory=L&conspaceCd=20201097&srResId=10&srShowTime=D";
+                doc = Jsoup.connect(htmlPageUrl).get();
+
+                menus = doc.select("div.corner_info ul li div.menu_title");
+
+                htmlContentInStringFormat += "<해오름>" + "\n";
+                for (Element e: menus) {
+                    htmlContentInStringFormat += e.text().trim() + "\n";
+                }
+
+                htmlPageUrl = "https://dorm.skku.edu/dorm_suwon";
+                doc = Jsoup.connect(htmlPageUrl).get();
+
+                menus = doc.select("div.mini-diet-wrap");
+
+                htmlContentInStringFormat += "<기숙사>" + "\n";
+                for (Element e: menus) {
                     htmlContentInStringFormat += e.text().trim() + "\n";
                 }
             }
