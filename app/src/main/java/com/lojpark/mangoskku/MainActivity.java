@@ -13,25 +13,34 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 
 public class MainActivity extends AppCompatActivity {
-
-    private TextView textView1;
-    private String htmlContentInStringFormat="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textView1 = (TextView)findViewById(R.id.textView1);
+        // Modify the activity's UI
+        TextView textView1;
+        textView1 = findViewById(R.id.textView1);
         textView1.setMovementMethod(new ScrollingMovementMethod());
 
-        JsoupAsyncTask jsoupAsyncTask = new JsoupAsyncTask();
+        // Start the AsyncTask, passing the Activity context in to a custom constructor
+        JsoupAsyncTask jsoupAsyncTask = new JsoupAsyncTask(this);
         jsoupAsyncTask.execute();
+
     }
 
-    private class JsoupAsyncTask extends AsyncTask<Void, Void, Void> {
+    private static class JsoupAsyncTask extends AsyncTask<Void, Void, Void> {
+        private WeakReference<MainActivity> activityReference;
+        private String htmlContentInStringFormat="";
+
+        // only retain a weak reference to the activity
+        JsoupAsyncTask(MainActivity context) {
+            activityReference = new WeakReference<>(context);
+        }
 
         @Override
         protected void onPreExecute() {
@@ -89,6 +98,15 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void result) {
+            // Get a reference to the activity if it is still there
+            MainActivity activity = activityReference.get();
+            if (activity == null || activity.isFinishing()) {
+                return;
+            }
+
+            // Modify the activity's UI
+            TextView textView1;
+            textView1 = activity.findViewById(R.id.textView1);
             textView1.setText(htmlContentInStringFormat);
         }
     }
